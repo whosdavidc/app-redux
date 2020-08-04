@@ -1,5 +1,7 @@
-//constant  s
 import axios from "axios"
+
+
+//constants
 const datainicial = {
     array: []
 }
@@ -18,10 +20,10 @@ export default function pokeReducer(state = datainicial , action){
 }
 
 //actions
-export const GET_POKEMONS_SUCESSFUL = () => async (dispatch, getState) =>{ //with the dispatch we can activate the reducer, and w/getState we get the data saved
+export const GET_POKEMONS_SUCESSFUL = () => async (dispatch, getState) =>{ //with the dispatch we can activate the reducer, and w/getState we get the initial data 
     try {
         const res = await axios.get("https://pokemon?limit=100&offset=200")
-        dispatch({
+        dispatch({   
             type: GET_POKEMONS_SUCCESSFUL,
             payload: res.date.results
         })
