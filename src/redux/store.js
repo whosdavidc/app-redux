@@ -7,7 +7,7 @@ import pokeReducer from "./pokeDucks";
     pokemons: pokeReducer 
  })
 
- const composeEnhacers = window._REDUX_DEVTOOLS_EXTENSION_COMPOSE_ || compose;
+ const composeEnhacers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
  export default function generateStore(){
      const store = createStore(rootReducer, composeEnhacers(applyMiddleware(thunk)));
