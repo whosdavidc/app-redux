@@ -12,4 +12,4 @@ import pokeReducer from "./pokeDucks";
  export default function generateStore(){
      const store = createStore(rootReducer, composeEnhacers(applyMiddleware(thunk)));
      return store;
- } 
+}
