@@ -3,8 +3,10 @@ import axios from "axios"
 
 //constants
 const datainicial = {
-    array: [],
-    offset: 0
+    count: 0,
+    next: null, 
+    previous: null,
+    results: []
 }
 
 //types
@@ -15,11 +17,11 @@ const NEXT_POKEMON_SUCCESSFULL = "NEXT_POKEMONS_SUCCESSFULL"
 export default function pokeReducer(state = datainicial , action){ //action = contet from the dispatch
     switch(action.type){
         case GET_POKEMONS_SUCCESSFULL:
-            return {...state, array: action.payload}  //with {...state} were saying that the state, becomes from the data saved
+            return {...state, ...action.payload}  //with {...state} were saying that the state, becomes from the data saved
 
         case NEXT_POKEMON_SUCCESSFULL:
             console.log(action.payload.offset);
-            return {...state, array: action.payload.array, offset: action.payload.offset}
+            return {...state, ...action.payload}
 
         default:
             return state
@@ -29,14 +31,11 @@ export default function pokeReducer(state = datainicial , action){ //action = co
 //actions
 export const GET_POKEMONS = () => async (dispatch, getState) =>{ //with the dispatch we can activate the reducer, and w/getState we can get the initial data 
 
-    //const offset = getState().pokemons.offset;
-    const {offset} = getState().pokemons;
-
     try {
-        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=${offset}&offset=200`)
+        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=0`)
         dispatch({   
             type: GET_POKEMONS_SUCCESSFULL,
-            payload: res.data.results
+            payload: res.data
         })
     }catch(error){
         console.log(error);
@@ -44,20 +43,32 @@ export const GET_POKEMONS = () => async (dispatch, getState) =>{ //with the disp
     }
 }
 
-export const NEXT_POKEMON = (numero) => async(dispatch, getState) =>{
-    const {offset} = getState().pokemons;
-    const next = offset + numero
+export const NEXT_POKEMON = () => async(dispatch, getState) =>{
 
+    const {next} = getState().pokemons
+ 
     try {
-        const res = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=30&offset=${next}`)
+        const res = await axios.get(next)
         dispatch({
             type: NEXT_POKEMON_SUCCESSFULL,
-            payload: {
-                array: res.data.results,
-                offset: next
-            }
+            payload: res.data
         })
     } catch (error) {
         console.log(error)
     }
+}
+
+export const PREV_POKEMON = () => async(dispatch, getState) =>{
+     const {previous} = getState().pokemons
+     try {
+        const res = await axios.get(previous)
+        dispatch({
+            type: NEXT_POKEMON_SUCCESSFULL,
+            payload: res.data
+        })
+    } catch (error) {
+        console.log(error)
+    }
+
+    
 }
