@@ -57,12 +57,21 @@ export const NEXT_POKEMON = () => async(dispatch, getState) =>{
 
     const {next} = getState().pokemons
  
+    if(localStorage.getItem(next)){
+        console.log("data from the localStorage")
+        dispatch({
+            type: GET_POKEMONS_SUCCESSFULL,
+            payload: JSON.parse(localStorage.getItem(next))
+        })
+        return
+    }
     try {
         const res = await axios.get(next)
         dispatch({
             type: NEXT_POKEMON_SUCCESSFULL,
             payload: res.data
         })
+        localStorage.setItem(next, JSON.stringify(res.data))
     } catch (error) {
         console.log(error)
     }
@@ -70,12 +79,23 @@ export const NEXT_POKEMON = () => async(dispatch, getState) =>{
 
 export const PREV_POKEMON = () => async(dispatch, getState) =>{
      const {previous} = getState().pokemons
+ 
+     if(localStorage.getItem(previous)){
+        console.log("data from the localStorage")
+        dispatch({
+            type: GET_POKEMONS_SUCCESSFULL,
+            payload: JSON.parse(localStorage.getItem(previous))
+        })
+        return
+    }
+ 
      try {
         const res = await axios.get(previous)
         dispatch({
             type: NEXT_POKEMON_SUCCESSFULL,
             payload: res.data
         })
+        localStorage.setItem(previous, JSON.stringify(res.data))
     } catch (error) {
         console.log(error)
     }
