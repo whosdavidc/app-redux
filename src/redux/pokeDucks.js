@@ -20,7 +20,6 @@ export default function pokeReducer(state = datainicial , action){ //action = co
             return {...state, ...action.payload}  //with {...state} were saying that the state, becomes from the data saved
 
         case NEXT_POKEMON_SUCCESSFULL:
-            console.log(action.payload.offset);
             return {...state, ...action.payload}
 
         default:
@@ -31,15 +30,26 @@ export default function pokeReducer(state = datainicial , action){ //action = co
 //actions
 export const GET_POKEMONS = () => async (dispatch, getState) =>{ //with the dispatch we can activate the reducer, and w/getState we can get the initial data 
 
+    if(localStorage.getItem("OFFSET=0")){
+        console.log("data from the localStorage")
+        dispatch({
+            type: GET_POKEMONS_SUCCESSFULL,
+            payload: JSON.parse(localStorage.getItem("OFFSET=0"))
+        })
+        return
+    }
+
+
     try {
         const res = await axios.get(`https://pokeapi.co/api/v2/pokemon?limit=20&offset=0`)
+        console.log("data from the API")
         dispatch({   
             type: GET_POKEMONS_SUCCESSFULL,
             payload: res.data
         })
+        localStorage.setItem("OFFSET=0", JSON.stringify(res.data))
     }catch(error){
         console.log(error);
-        console.log("aca rey")
     }
 }
 
